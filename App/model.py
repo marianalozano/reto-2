@@ -37,14 +37,105 @@ Se define la estructura de un catálogo de videos. El catálogo tendrá dos list
 los mismos.
 """
 
-# Construccion de modelos
+def newCatalog():
 
-# Funciones para agregar informacion al catalogo
+    catalog = {'artists': None,
+               'albums': None,
+               'tracks': None}
+    
 
-# Funciones para creacion de datos
+    catalog['artists'] = lt.newList('ARRAY_LIST', compareArtistsByName)
 
-# Funciones de consulta
+    catalog['albums'] = mp.newMap(comparefunction=compareAlbumsByName)
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+    catalog['tracks'] = mp.newMap(comparefunction=compareTracksByName)
 
-# Funciones de ordenamiento
+
+
+def compareArtistsByName(keyname, artist):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    artistentry = me.getKey(artist)
+    if (keyname == artistentry):
+        return 0
+    elif (keyname > artistentry):
+        return 1
+    else:
+        return -1
+
+def compareTracksByName (keyname, track):
+    trackentry = me.getKey(track)
+    if (keyname == trackentry):
+        return 0
+    elif (keyname > trackentry):
+        return 1
+    else:
+        return -1
+
+def compareAlbumsByName (keyname, album):
+    albumentry = me.getKey(album)
+    if (keyname == albumentry):
+        return 0
+    elif (keyname > albumentry):
+        return 1
+    else:
+        return -1
+
+def addArtist(catalog, artist):
+    """
+    Esta funcion adiciona un libro a la lista de libros,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de autores, una referencia
+    al libro.
+    Finalmente crea una entrada en el Map de años, para indicar que este
+    libro fue publicaco en ese año.
+    """
+    lt.addLast(catalog['artists'], artist)
+    mp.put(catalog['artist'], artist['spotify_artist_id'], artist)
+    artists = artist['artists'].split(",")  # Se obtienen los autores
+    for artist in artists:
+        addArtist(catalog, artist.strip(), artist)
+
+def addAlbum(catalog, album):
+    """
+    Esta funcion adiciona un libro a la lista de libros,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de autores, una referencia
+    al libro.
+    Finalmente crea una entrada en el Map de años, para indicar que este
+    libro fue publicaco en ese año.
+    """
+    lt.addLast(catalog['albums'], album)
+    mp.put(catalog['album'], album['spotify_album_id'], album)
+    albums = album['albums'].split(",")  # Se obtienen los autores
+    for album in albums:
+        addAlbum(catalog, album.strip(), album)
+
+def addTrack(catalog, track):
+    """
+    Esta funcion adiciona un libro a la lista de libros,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de autores, una referencia
+    al libro.
+    Finalmente crea una entrada en el Map de años, para indicar que este
+    libro fue publicaco en ese año.
+    """
+    lt.addLast(catalog['albums'], track)
+    mp.put(catalog['album'], track['spotify_track_id'], track)
+    tracks = track['albums'].split(",")  # Se obtienen los autores
+    for track in tracks:
+        addTrack(catalog, track.strip(), track)
+
+def artistsSize(catalog):
+
+    return mp.size(catalog['artists'])
+
+def albumsSize(catalog):
+
+    return mp.size(catalog['albums'])
+
+def tracksSize(catalog):
+
+    return mp.size(catalog['tracks'])

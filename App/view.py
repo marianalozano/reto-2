@@ -26,33 +26,63 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
+def newController():
+    """
+    Se crea una instancia del controlador
+    """
+    control = controller.newController()
+    return control
 
-"""
-La vista se encarga de la interacción con el usuario
-Presenta el menu de opciones y por cada seleccion
-se hace la solicitud al controlador para ejecutar la
-operación solicitada
-"""
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Inicializar Catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Consultar los libros de un año")
+    print("4- Consultar los libros de un autor")
+    print("5- Consultar los Libros por etiqueta")
+    print("6- Ordenar mejores libros de un año")
+    print("0- Salir")
 
-catalog = None
+# ===================================
+# Funciones de inicializacion
+# ===================================
 
-"""
-Menu principal
-"""
+
+def initCatalog():
+    """
+    Inicializa el catalogo de libros
+    """
+    return controller.initCatalog()
+
+
+def loadData(catalog):
+    """
+    Carga los libros en el catalogo
+    """
+    controller.loadData(catalog)
+
+
+ctrlr = None
+# ===================================
+# Menu principal
+# ===================================
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("Inicializando Catálogo ....")
+        ctrlr = newController()
 
     elif int(inputs[0]) == 2:
-        pass
+        # TODO: modificaciones para observar el tiempo y memoria
+        print("Cargando información de los archivos ....")
+        answer = controller.loadData(ctrlr)
+        print('Artistas cargados: ' + str(controller.artistSize(ctrlr)))
+        print('Albumes cargados: ' + str(controller.albumsSize(ctrlr)))
+        print('Tracks cargados: ' + str(controller.tracksSize(ctrlr)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "||",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
-    else:
-        sys.exit(0)
-sys.exit(0)
